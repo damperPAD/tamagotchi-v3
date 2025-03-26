@@ -1,5 +1,57 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - layout_properties: {grid_position: 'LDGVNG,CBOJLI'}
+    name: drop_down_pet_type
+    properties:
+      items: [Dog, Cat, Dragon]
+    type: DropDown
+  - layout_properties: {grid_position: 'LDGVNG,RESCES'}
+    name: text_box_name
+    properties: {placeholder: Enter pet name}
+    type: TextBox
+  - event_bindings: {click: btn_create_pet_click}
+    layout_properties: {grid_position: 'LDGVNG,RBZZCN'}
+    name: btn_create_pet
+    properties: {text: Create Pet}
+    type: Button
+  - layout_properties: {grid_position: 'KQHQWX,HGTVBE'}
+    name: label_name
+    properties: {}
+    type: Label
+  - layout_properties: {grid_position: 'KQHQWX,IWBIJN'}
+    name: label_type
+    properties: {}
+    type: Label
+  - layout_properties: {grid_position: 'KQHQWX,EVWVVC'}
+    name: label_hunger
+    properties: {}
+    type: Label
+  - layout_properties: {grid_position: 'KQHQWX,AXXCPF'}
+    name: label_happiness
+    properties: {}
+    type: Label
+  - layout_properties: {grid_position: 'KQHQWX,XIWSUR'}
+    name: label_energy
+    properties: {}
+    type: Label
+  - layout_properties: {grid_position: 'HIWCIO,FMTDVX'}
+    name: btn_feed
+    properties: {text: Feed}
+    type: Button
+  - layout_properties: {grid_position: 'HIWCIO,USTGDI'}
+    name: btn_play
+    properties: {text: Play}
+    type: Button
+  - layout_properties: {grid_position: 'HIWCIO,XCHBAG'}
+    name: btn_sleep
+    properties: {text: Sleep}
+    type: Button
+  - event_bindings: {tick: timer_1_tick}
+    layout_properties: {grid_position: 'XDYDBF,FEWAEY'}
+    name: timer_1
+    properties: {interval: 5}
+    type: Timer
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel
@@ -7,6 +59,10 @@ components:
   name: navbar_links
   properties: {}
   type: FlowPanel
+- layout_properties: {slot: title}
+  name: headline_1
+  properties: {role: headline, text: Tamagotchi}
+  type: Label
 container:
   properties: {html: '@theme:standard-page.html'}
   type: HtmlTemplate
