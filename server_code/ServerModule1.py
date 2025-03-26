@@ -1,37 +1,42 @@
 import anvil.server
 
-# This is a server module. It runs on the Anvil server,
-# rather than in the user's browser.
-#
-# To allow anvil.server.call() to call functions here, we mark
-# them with @anvil.server.callable.
-# Here is an example - you can replace it with your own:
-#
-# @anvil.server.callable
-# def say_hello(name):
-#   print("Hello, " + name + "!")
-#   return 42
-#
-
-
-pet = None
+# --- Pet Classes ---
 
 class Pet:
-    def __init__(self, name):
+    def __init__(self, name, hunger=50, happiness=50, energy=50):
         self._name = name
-        self._hunger = 50
-        self._happiness = 50
-        self._energy = 50
+        self._hunger = hunger
+        self._happiness = happiness
+        self._energy = energy
 
     def get_status(self):
         return {
-            "Type": self.__class__.__name__,
             "Name": self._name,
+            "Type": self.__class__.__name__,
             "Hunger": self._hunger,
             "Happiness": self._happiness,
             "Energy": self._energy
         }
 
+    def to_dict(self):
+        return {
+            "name": self._name,
+            "hunger": self._hunger,
+            "happiness": self._happiness,
+            "energy": self._energy,
+            "type": self.__class__.__name__
+        }
+
+    @staticmethod
+    def from_dict(data):
+        cls = {"DogPet": DogPet, "CatPet": CatPet, "DragonPet": DragonPet}.get(data["type"], Pet)
+        return cls(
+            name=data["name"],
+            hunger=data["hunger"],
+            happiness=data["happiness"],
+            energy=data["energy"]
+        )
+  
     def feed(self):
         self._hunger = max(0, self._hunger - 10)
         self._happiness += 5
@@ -50,29 +55,28 @@ class Pet:
         self._energy = max(0, self._energy - 2)
         self._happiness = max(0, self._happiness - 1)
 
+# --- Subclasses ---
+
 class DogPet(Pet):
     def play(self):
-        # Dogs love to play — extra happiness!
         self._happiness += 15
         self._energy -= 15
         self._hunger += 10
 
 class CatPet(Pet):
     def sleep(self):
-        # Cats are super chill — extra energy from sleep
         self._energy += 30
         self._hunger += 10
 
 class DragonPet(Pet):
     def feed(self):
-        # Dragons have BIG appetites!
         self._hunger = max(0, self._hunger - 20)
         self._happiness += 10
 
+# --- Server Functions ---
 
 @anvil.server.callable
 def create_pet(pet_type, name):
-    global pet
     if pet_type == "Dog":
         pet = DogPet(name)
     elif pet_type == "Cat":
@@ -81,30 +85,43 @@ def create_pet(pet_type, name):
         pet = DragonPet(name)
     else:
         pet = Pet(name)
+
+    anvil.server.session['pet'] = pet.to_dict()
     return pet.get_status()
 
 @anvil.server.callable
+def get_pet_status():
+    pet_data = anvil.server.session.get('pet', None)
+    if pet_data:
+      pet = Pet.from_dict(pet_data)
+      anvil.server.session["pet"] = pet.to_dict()  # <== THIS LINE IS CRUCIAL
+      return pet.get_status()
+    else:
+      return None
+
+@anvil.server.callable
 def interact_with_pet(action):
-    if pet is not None:
-        if action == "feed":
-            pet.feed()
-        elif action == "play":
-            pet.play()
-        elif action == "sleep":
-            pet.sleep()
-        return pet.get_status()
+    pet_data = anvil.server.session.get('pet', None)
+    if pet_data:
+      pet = Pet.from_dict(pet_data)   
+      if action == "feed":
+          pet.feed()
+      elif action == "play":
+          pet.play()
+      elif action == "sleep":
+          pet.sleep()
+      anvil.server.session["pet"] = pet.to_dict()  # <== THIS LINE IS CRUCIAL
+      return pet.get_status()
     else:
         return None
 
-def tick(self):
-    self._hunger = min(100, self._hunger + 2)
-    self._energy = max(0, self._energy - 2)
-    self._happiness = max(0, self._happiness - 1)
-
 @anvil.server.callable
 def pet_tick():
-    if pet is not None:
-        pet.tick()
-        return pet.get_status()
+    pet_data = anvil.server.session.get('pet', None)
+    if pet_data:
+      pet = Pet.from_dict(pet_data)
+      pet.tick()
+      anvil.server.session["pet"] = pet.to_dict()  # <== THIS LINE IS CRUCIAL
+      return pet.get_status()
     else:
         return None

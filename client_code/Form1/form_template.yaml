@@ -34,15 +34,18 @@ components:
     name: label_energy
     properties: {}
     type: Label
-  - layout_properties: {grid_position: 'HIWCIO,FMTDVX'}
+  - event_bindings: {click: btn_feed_click}
+    layout_properties: {grid_position: 'HIWCIO,FMTDVX'}
     name: btn_feed
     properties: {text: Feed}
     type: Button
-  - layout_properties: {grid_position: 'HIWCIO,USTGDI'}
+  - event_bindings: {click: btn_play_click}
+    layout_properties: {grid_position: 'HIWCIO,USTGDI'}
     name: btn_play
     properties: {text: Play}
     type: Button
-  - layout_properties: {grid_position: 'HIWCIO,XCHBAG'}
+  - event_bindings: {click: btn_sleep_click}
+    layout_properties: {grid_position: 'HIWCIO,XCHBAG'}
     name: btn_sleep
     properties: {text: Sleep}
     type: Button

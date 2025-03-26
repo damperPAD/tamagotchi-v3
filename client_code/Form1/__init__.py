@@ -19,30 +19,28 @@ class Form1(Form1Template):
         self.update_ui(status)
 
   def update_ui(self, status):
-    if status is None:
-      self.label_name.text = "Name: N/A"
-      self.label_type.text = "Type: N/A"
-      self.label_hunger.text = "Hunger: N/A"
-      self.label_happiness.text = "Happiness: N/A"
-      self.label_energy.text = "Energy: N/A"
-    else:
-      self.label_name.text = f"Name: {status['Name']}"
-      self.label_type.text = f"Type: {status['Type']}"
-      self.label_hunger.text = f"Hunger: {status['Hunger']}"
-      self.label_happiness.text = f"Happiness: {status['Happiness']}"
-      self.label_energy.text = f"Energy: {status['Energy']}"
+    if not status:
+        return # do nothing if there's no valid status
+    self.label_name.text = f"Name: {status['Name']}"
+    self.label_type.text = f"Type: {status['Type']}"
+    self.label_hunger.text = f"Hunger: {status['Hunger']}"
+    self.label_happiness.text = f"Happiness: {status['Happiness']}"
+    self.label_energy.text = f"Energy: {status['Energy']}"
 
   def btn_feed_click(self, **event_args):
-      status = anvil.server.call('interact_with_pet', 'feed')
-      self.update_ui(status)
+    print("feed me")
+    status = anvil.server.call('interact_with_pet', 'feed')
+    self.update_ui(status)
   
   def btn_play_click(self, **event_args):
-      status = anvil.server.call('interact_with_pet', 'play')
-      self.update_ui(status)
+    print("Play with me")
+    status = anvil.server.call('interact_with_pet', 'play')
+    self.update_ui(status)
   
   def btn_sleep_click(self, **event_args):
-      status = anvil.server.call('interact_with_pet', 'sleep')
-      self.update_ui(status)
+    print("time to sleep")
+    status = anvil.server.call('interact_with_pet', 'sleep')
+    self.update_ui(status)
 
   def timer_1_tick(self, **event_args):
     """This method is called Every [interval] seconds. Does not trigger if [interval] is 0."""
