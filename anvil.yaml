@@ -1,6 +1,8 @@
 allow_embedding: false
-name: Tamagotchi v2
-package_name: Tamagotchi_v2
+db_schema: {}
+name: Tamagotchi v3
+package_name: Tamagotchi_v3
+renamed: true
 runtime_options:
   client_version: '3'
   server_spec: {base: python310-minimal}
